@@ -23,15 +23,9 @@ variable "openstack_flavor_id" {
 variable "openstack_network_name" {
   description = "The name of the network to be used for deploy operations."
 }
-
-variable "openstack_volume_size" {
-  description = "The size of the storage volume to be attached to the vm."
-}
-
 variable "image_user_id" {
  description = "the user id to access the system image"
 }
-
 variable "image_user_pwd" {
  description = "the user pwd used to connect to the image"
 }
@@ -61,11 +55,6 @@ resource "random_id" "random_padding" {
 provider "openstack" {
   insecure = true
   version  = "~> 0.3"
-}
-
-resource "openstack_blockstorage_volume_v2" "volume_1" {
-  name = "volume_1"
-  size = ${var.openstack_volume_size}
 }
 
 resource "openstack_compute_instance_v2" "single-vm" {
@@ -113,11 +102,6 @@ EOF
 ${var.user_id} ALL=(ALL) NOPASSWD:ALL
 EOF
     destination = "/etc/sudoers.d/cam-added-users"
-  }
-
-  resource "openstack_compute_volume_attach_v2" "va_1" {
-    instance_id = "${openstack_compute_instance_v2.instance_1.id}"
-    volume_id   = "${openstack_blockstorage_volume_v2.volume_1.id}"
   }
 
 }

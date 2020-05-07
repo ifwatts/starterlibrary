@@ -36,7 +36,7 @@
       "required": true,
       "immutable": false,
       "group_name": "environment"
-    }, 
+    },
     {
       "name":  "openstack_image_id",
       "type": "string",
@@ -71,9 +71,9 @@
       "group_name": "virtualmachine"
     },
     {
-      "name":  "image_id_username",
+      "name":  "user_id",
       "type": "string",
-      "description": "The username to SSH into image ID",
+      "description": "The username to SSH into the system",
       "hidden": false,
       "label": "OpenStack Image Username",
       "secured": false,
@@ -82,15 +82,39 @@
       "group_name": "virtualmachine"
     },
     {
-      "name":  "image_id_password",
+      "name":  "user_pwd",
       "type": "password",
-      "description": "The password of the username to SSH into image ID",
+      "description": "The password of the username to SSH into the system",
       "hidden": false,
       "label": "OpenStack Image Password",
       "secured": true,
-      "required": false,
+      "required": true,
       "immutable": false,
       "group_name": "virtualmachine"
+    },
+    {
+      "name":  "image_user_id",
+      "type": "string",
+      "description": "The username to SSH into the image",
+      "hidden": false,
+      "label": "OpenStack Image Username",
+      "secured": true,
+      "required": true,
+      "immutable": false,
+      "group_name": "virtualmachine",
+      "default": "root"
+    },
+    {
+      "name":  "image_user_pwd",
+      "type": "password",
+      "description": "The password of the username to SSH into the image",
+      "hidden": false,
+      "label": "OpenStack Image Password",
+      "secured": true,
+      "required": true,
+      "immutable": false,
+      "group_name": "virtualmachine",
+      "default": "zlinux"
     },
     {
       "name": "instance_name",
@@ -102,7 +126,7 @@
       "required": false,
       "immutable": false,
       "group_name": "virtualmachine"
-    },       
+    },
     {
       "name":  "key_pair_name",
       "type": "string",

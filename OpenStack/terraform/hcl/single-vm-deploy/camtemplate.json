@@ -1,5 +1,5 @@
 {
-   "name": "OpenStack Single Virtual Machine",
+   "name": "OpenStack Single Virtual Machine demo",
    "description": "OpenStack example to instantiate virtual machine.",
    "version": "1.0",
    "imageUrl": "./assets/svg/IBM_WebSphere_Standalone.svg",
