@@ -1,0 +1,184 @@
+{
+  "input_datatypes": [],
+  "output_datatype": "content_template_output",
+  "input_groups": [
+    {
+      "name": "cloud",
+      "label": "Cloud Input Variables"
+    },
+    {
+      "name": "virtualmachine",
+      "label": "Virtual Machine Input Variables"
+    },
+    {
+      "name": "ssh_keys",
+      "label": "SSH Keys"
+    },
+    {
+      "name": "environment",
+      "label": "Environment"
+    }
+  ],
+  "output_groups": [
+    {
+      "name": "content_template_output",
+      "label": "Outputs"
+    }
+  ],
+  "template_input_params": [
+    {
+      "name": "ibm_stack_name",
+      "type": "string",
+      "description": "A unique stack name.",
+      "hidden": true,
+      "label": "A unique stack name.",
+      "secured": false,
+      "required": true,
+      "immutable": false,
+      "group_name": "environment"
+    },
+    {
+      "name":  "openstack_image_id",
+      "type": "string",
+      "description": "The ID of the image to be used for deploy operations.",
+      "hidden": false,
+      "label": "OpenStack Image ID",
+      "secured": false,
+      "required": true,
+      "immutable": false,
+      "group_name": "virtualmachine"
+    },
+    {
+      "name":  "openstack_flavor_id",
+      "type": "string",
+      "description": "The ID of the flavor to be used for deploy operations.",
+      "hidden": false,
+      "label": "OpenStack Flavor ID",
+      "secured": false,
+      "required": true,
+      "immutable": false,
+      "group_name": "virtualmachine"
+    },
+    {
+      "name":  "openstack_network_name",
+      "type": "string",
+      "description": "The name of the network to be used for deploy operations.",
+      "hidden": false,
+      "label": "OpenStack Network Name",
+      "secured": false,
+      "required": true,
+      "immutable": false,
+      "group_name": "virtualmachine"
+    },
+    {
+      "name":  "openstack_volume_name",
+      "type": "string",
+      "description": "The name of the volume to be attached to the instance.",
+      "hidden": false,
+      "label": "OpenStack Volume Name",
+      "secured": false,
+      "required": true,
+      "immutable": false,
+      "group_name": "virtualmachine"
+    },
+    {
+      "name":  "openstack_volume_size",
+      "type": "string",
+      "description": "The size of the volume to be attached to the instance.",
+      "hidden": false,
+      "label": "OpenStack Volume Name",
+      "secured": false,
+      "required": true,
+      "immutable": false,
+      "group_name": "virtualmachine"
+    },
+    {
+      "name":  "user_id",
+      "type": "string",
+      "description": "The username to SSH into the system",
+      "hidden": false,
+      "label": "OpenStack Image Username",
+      "secured": false,
+      "required": true,
+      "immutable": false,
+      "group_name": "virtualmachine"
+    },
+    {
+      "name":  "user_pwd",
+      "type": "password",
+      "description": "The password of the username to SSH into the system",
+      "hidden": false,
+      "label": "OpenStack Image Password",
+      "secured": true,
+      "required": true,
+      "immutable": false,
+      "group_name": "virtualmachine"
+    },
+    {
+      "name":  "image_user_id",
+      "type": "string",
+      "description": "The username to SSH into the image",
+      "hidden": false,
+      "label": "OpenStack Image Username",
+      "secured": true,
+      "required": true,
+      "immutable": false,
+      "group_name": "virtualmachine",
+      "default": "root"
+    },
+    {
+      "name":  "image_user_pwd",
+      "type": "password",
+      "description": "The password of the username to SSH into the image",
+      "hidden": false,
+      "label": "OpenStack Image Password",
+      "secured": true,
+      "required": true,
+      "immutable": false,
+      "group_name": "virtualmachine",
+      "default": "zlinux"
+    },
+    {
+      "name": "instance_name",
+      "type": "string",
+      "description": "A unique instance name. If a name is not provided a name would be generated.",
+      "hidden": false,
+      "label": "Instance name",
+      "secured": false,
+      "required": false,
+      "immutable": false,
+      "group_name": "virtualmachine"
+    },
+    {
+      "name":  "key_pair_name",
+      "type": "string",
+      "description": "The name of a ssh key pair which will be injected into the instance when they are created. The key pair must already be created and associated with the tenant's account. Changing key pair name creates a new instance.",
+      "hidden": false,
+      "label": "Key pair name",
+      "secured": false,
+      "required": false,
+      "immutable": false,
+      "group_name": "virtualmachine"
+    }
+  ],
+  "template_output_params": [
+    {
+      "name": "single-vm-ip",
+      "label": "IP Addresss of Virtual Machine",
+      "description": "The Public and Public IP address",
+      "type": "string",
+      "hidden": false,
+      "secured": false,
+      "group_name": "content_template_output"
+    },
+    {
+      "name": "stack_id",
+      "label": "Generated Stack ID",
+      "description": "The generated stack id",
+      "type": "string",
+      "hidden": false,
+      "secured": false,
+      "group_name": "content_template_output"
+    }
+  ]
+}
