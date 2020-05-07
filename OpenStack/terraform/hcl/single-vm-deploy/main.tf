@@ -24,22 +24,32 @@ variable "openstack_network_name" {
   description = "The name of the network to be used for deploy operations."
 }
 
-variable "image_id_username" {
-  description = "The username to SSH into image ID"
+variable "openstack_volume_size" {
+  description = "The size of the storage volume to be attached to the vm."
 }
 
-variable "image_id_password" {
-  description = "The password of the username to SSH into image ID"
-  default = ""
+variable "image_user_id" {
+ description = "the user id to access the system image"
+}
+
+variable "image_user_pwd" {
+ description = "the user pwd used to connect to the image"
+}
+
+variable "user_id" {
+   description = "the user id to add to the system for access"
+}
+variable "user_pwd" {
+  description = "the pwd for the user to log in with"
 }
 
 variable "key_pair_name" {
   description = "The name of a ssh key pair which will be injected into the instance when they are created. The key pair must already be created and associated with the tenant's account. Changing key pair name creates a new instance."
-  default = ""  
+  default = ""
 }
 
 variable "instance_name" {
-	description = "A unique instance name. If a name is not provided a name would be generated."	
+	description = "A unique instance name. If a name is not provided a name would be generated."
 }
 
 # Generate a random padding
@@ -50,18 +60,66 @@ resource "random_id" "random_padding" {
 
 provider "openstack" {
   insecure = true
-  #version  = "~> 0.3"
+  version  = "~> 0.3"
 }
 
-resource "openstack_compute_instance_v2" "single-vm" {	
+resource "openstack_blockstorage_volume_v2" "volume_1" {
+  name = "volume_1"
+  size = ${var.openstack_volume_size}
+}
+
+resource "openstack_compute_instance_v2" "single-vm" {
   name      = "${ length(var.instance_name) > 0 ? var.instance_name : format("terraform-single-vm-${random_id.random_padding.hex}-%02d", count.index+1)}"
   image_id  = "${var.openstack_image_id}"
   flavor_id = "${var.openstack_flavor_id}"
-  key_pair  = "${var.key_pair_name}"
+  #key_pair  = "${var.key_pair_name}"
 
   network {
     name = "${var.openstack_network_name}"
   }
+
+  # Specify the ssh connection
+  connection {
+    user     = "${var.image_user_id}"
+    password = "${var.image_user_pwd}"
+    timeout  = "10m"
+  }
+
+  # Creates a file to add a user and set it's password
+  provisioner "file" {
+    content = <<EOF
+#!/bin/bash
+USER=$1
+PASSWORD=$2
+sudo useradd -m $USER
+echo -e "$${PASSWORD}\n$${PASSWORD}" | (sudo passwd $USER)
+EOF
+
+    destination = "/tmp/addUser.sh"
+  }
+
+  # Execute the script remotely
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/addUser.sh; sudo bash /tmp/addUser.sh \"${var.user_id}\" \"${var.user_pwd}\"",
+    ]
+  }
+
+  #Adds user to a custom imported sudoers file
+  provisioner "file" {
+    content = <<EOF
+# Created by Cloud Automation Manager
+# User rules for ${var.user_id}
+${var.user_id} ALL=(ALL) NOPASSWD:ALL
+EOF
+    destination = "/etc/sudoers.d/cam-added-users"
+  }
+
+  resource "openstack_compute_volume_attach_v2" "va_1" {
+    instance_id = "${openstack_compute_instance_v2.instance_1.id}"
+    volume_id   = "${openstack_blockstorage_volume_v2.volume_1.id}"
+  }
+
 }
 
 output "single-vm-ip" {
